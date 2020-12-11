@@ -67,10 +67,6 @@ def residual (t,SV,param,ptr):
 
 
 
-def species_flux:
-    
-
-
 
 
 
