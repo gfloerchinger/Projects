@@ -12,41 +12,47 @@
 """
 
 # Import necessary modules:
-from scipy.integrate import solve_ivp #integration function for ODE system.
 from matplotlib import pyplot as plt
 import numpy as np
 
 
-from scipy.integrate import solve_ivp #integration function for ODE system.
-from SOFC_function_1D import residual # point the model to the residual function
-from SOFC_inputs import param, SV_0, ptr
-    
-    
-    
-    
-solution = solve_ivp(lambda t, y: residual(t, y, param, ptr),param.time_span, SV_0, rtol=1e-9, atol=1e-7, method='BDF')
-    
-    
 
-for var in solution.y:
-    plt.plot(solution.t,var)
-    
-plt.legend(['Anode double layer','Cathode double layer'])
     
     
-# V_elyte = solution.y[0,:]
-# V_ca = V_elyte + solution.y[1,:]
-
-
-# plt.plot(solution.t,V_elyte)
-# plt.plot(solution.t,V_ca)
-
-# plt.xlabel('Time (s)',fontsize=14)
-# plt.ylabel('Electric Potential (V)',fontsize=14)
-
-# plt.legend([r'$\phi_{\rm elyte}$',r'$\phi_{\rm cathode}$'],fontsize=14,frameon=False)
+def SOFC_model(i_ext = None,P = None):     
+    from scipy.integrate import solve_ivp #integration function for ODE system.
+    from SOFC_function_1D import residual # point the model to the residual function
+    from SOFC_inputs import param, SV_0, ptr
    
+    if i_ext:
+        param.i_ext = i_ext
+    if P:
+        param.P_an = P
+    
+    solution = solve_ivp(lambda t, y: residual(t, y, param, ptr),param.time_span, SV_0, rtol=1e-9, atol=1e-7, method='BDF')
+    
+    return solution
+    
 
+# for var in solution.y
+#     plt.plot(solution.t,var)
+    
+# plt.legend(['Anode double layer','Cathode double layer'])
+    
+    
+i_array = np.linspace(0.00000001,100000,50)
+V_cell = np.zeros_like(i_array)
 
+for j, current in enumerate(i_array):
+    print(current)
+    solution = SOFC_model(current)
+    V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
+    print(V_cell[j])
 
+plt.plot(i_array,V_cell,'.')
+plt.savefig('results/polarization.png',dpi=350)
+plt.show()
 
+plt.plot(i_array,V_cell,'.')
+
+plt.show()
