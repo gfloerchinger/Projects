@@ -16,9 +16,9 @@ n = 2   #charge transfer number
 T = 873     #Temperature [K]
 P_an_0 = 101325  #Pressure [Pa]
 
-i_ext =  0       #applied current [A/m^2]
+i_ext =  10000       #applied current [A/m^2]
 
-t_final =  100    # solve time [sec]
+t_final =  1000000    # solve time [sec]
 
 
 #Mol fractions of fuel in anode {H2, H2O}
@@ -36,7 +36,7 @@ d_part_CL = 1E-6 #particle diamater of anode
 nu_k_an = np.array([-1,1])
 
 " THIS IS A GUESS :eventually it will depend on the gibbs gree energy and the activities"
-delta_phi_an_eq =  0.6 #Anode overpotental [V]
+delta_phi_an_eq =  -0.6 #Anode overpotental [V]
 delta_phi_ca_eq =  0.4 #Cathode overpotental [V]
 
 #delta_phi_an_eq = delta_G_0_an - R*T/(n*F)*logproduct(np.power(X_an_0,nu_an))
@@ -65,7 +65,7 @@ sigma_cathode = 8.4E3 #cathode electrical conductivity [S/m]
 E_a_ca = 1.309E5   #Cathode activation energy [J/mol]
 E_a_an = 1.295E5   #Anode activation energy [J/mol]
 
-K_a = 3.2E13 #anode pre-expoenntal factor [S/m^2]
+K_a = 3.2E13 #anode pre-expoenntal factor [S/m/bar^0.5]
 K_c = 7.0E11 #cathode pre-expoenntal factor [S/m^2]
 
 
@@ -78,7 +78,7 @@ alpha_ca_a = 0.5
 alpha_ca_c = 0.5
 
 
-delta_phi_dl_an_0 = phi_elyte_0 - phi_an_0
+delta_phi_dl_an_0 = phi_an_0 - phi_elyte_0
 delta_phi_dl_ca_0 = phi_ca_0 - phi_elyte_0
 
 
@@ -86,6 +86,34 @@ C_k_an_0 = P_an_0*X_k_an_0/R/T
 
 SV_0 = np.hstack([delta_phi_dl_an_0, delta_phi_dl_ca_0, C_k_an_0, C_k_an_0])
 
+
+d_pore_an = 1E-6
+eps_an = 0.26
+tau_an = 3
+
+d_pore_ca = 1E-6
+eps_ca = 0.3
+tau_ca = 3
+
+
+#moleqular masses
+MM_H2 = 2.016
+MM_H2O = 18.015
+MM_N2 = 28.0134
+MM_O2 = 16.000
+
+
+X_H2 = 0.97
+X_H2O = 0.03
+X_O2 = 0.21
+X_N2 = 0.79
+
+
+#diffusion volumes for fuller approx 
+V_H2 = 6.12
+V_H2O = 12.7
+V_N2 = 17.9
+V_O2 = 16.6
 
 
 class param:
@@ -103,7 +131,7 @@ class param:
     delta_phi_an_eq = delta_phi_an_eq  #Anode overpotental [V]
     delta_phi_ca_eq = delta_phi_ca_eq #Cathode overpotental [V]
     
-
+    
     #IT-SOFC metal supported parameters from expirimental data (Leah et al.)
     E_a_ca = E_a_ca   #Cathode activation energy [J/mol]
     E_a_an = E_a_an   #Anode activation energy [J/mol]
@@ -137,8 +165,26 @@ class param:
 
     d_part_CL = d_part_CL
     
-    A_fac_an = 3*th_an*eps_g_CL/(d_part_CL/2)
+    A_fac_an = 3*th_an*eps_g_CL/(d_part_CL/2)    
     
+    d_pore_an = d_pore_an
+    d_pore_ca = d_pore_ca
+    
+    eps_an = eps_an
+    eps_ca = eps_ca
+    
+    tau_an = tau_an
+    tau_ca = tau_ca
+    
+    MM_f = [MM_H2,MM_H2O]
+    MM_a = [MM_O2,MM_N2]
+
+    X_f = [X_H2,X_H2O]
+    X_a = [X_O2,X_N2]
+
+    V_f = [V_H2,V_H2O]
+    V_a = [V_O2,V_N2]
+
 "Need pointers"
 
 

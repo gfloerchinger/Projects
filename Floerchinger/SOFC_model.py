@@ -32,27 +32,44 @@ def SOFC_model(i_ext = None,P = None):
     solution = solve_ivp(lambda t, y: residual(t, y, param, ptr),param.time_span, SV_0, rtol=1e-9, atol=1e-7, method='BDF')
     
     return solution
-    
 
-# for var in solution.y
-#     plt.plot(solution.t,var)
+
+
+
     
+# solution = SOFC_model(1E-10)
+
+# V_cell = solution.y[1,-1] - solution.y[0,-1]
+
+# plt.plot(solution.t,solution.y[1,:])
+# plt.plot(solution.t,solution.y[0,:])
+#print(V_cell)
 # plt.legend(['Anode double layer','Cathode double layer'])
     
     
-i_array = np.linspace(0.00000001,100000,50)
+i_array = np.linspace(0.00000001,10000,50)
 V_cell = np.zeros_like(i_array)
+Dphi_an= np.zeros_like(i_array)
+Dphi_ca= np.zeros_like(i_array)
 
 for j, current in enumerate(i_array):
     print(current)
     solution = SOFC_model(current)
     V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
+    Dphi_an[j] = solution.y[0,-1]
+    Dphi_ca[j] = solution.y[1,-1]
     print(V_cell[j])
-
+plt.figure(0)
 plt.plot(i_array,V_cell,'.')
-plt.savefig('results/polarization.png',dpi=350)
+plt.xlabel('External Current')
+plt.ylabel('Voltage')
 plt.show()
 
-plt.plot(i_array,V_cell,'.')
 
-plt.show()
+# plt.figure(1)
+# plt.plot(i_array,Dphi_an)
+# plt.plot(i_array,Dphi_ca)
+
+# plt.plot(i_array,V_cell,'.')
+
+# plt.show()
