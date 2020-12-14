@@ -37,39 +37,46 @@ def SOFC_model(i_ext = None,P = None):
 
 
     
-# solution = SOFC_model(1E-10)
+# solution = SOFC_model(1000)
 
-# V_cell = solution.y[1,-1] - solution.y[0,-1]
+# C_H2_CL = solution.y[4,-1]
+# C_H2O_CL = solution.y[5,-1]
 
-# plt.plot(solution.t,solution.y[1,:])
-# plt.plot(solution.t,solution.y[0,:])
-#print(V_cell)
-# plt.legend(['Anode double layer','Cathode double layer'])
-    
+# print(solution.y[4,-1],solution.y[5,-1])
+
+
+
+##############################################################    
     
 i_array = np.linspace(0.00000001,10000,50)
 V_cell = np.zeros_like(i_array)
-Dphi_an= np.zeros_like(i_array)
-Dphi_ca= np.zeros_like(i_array)
+#Dphi_an = np.zeros_like(i_array)
+#Dphi_ca = np.zeros_like(i_array)
+C_H2_CL = np.zeros_like(i_array)
+C_H2O_CL = np.zeros_like(i_array)
 
 for j, current in enumerate(i_array):
-    print(current)
+    #print(current)
     solution = SOFC_model(current)
     V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
-    Dphi_an[j] = solution.y[0,-1]
-    Dphi_ca[j] = solution.y[1,-1]
-    print(V_cell[j])
+    #Dphi_an[j] = solution.y[0,-1]
+    #Dphi_ca[j] = solution.y[1,-1]
+    
+    #print(V_cell[j])
+    
+    C_H2_CL[j] = solution.y[4,-1]
+    C_H2O_CL[j] = solution.y[5,-1]
+    print(solution.y[4,-1],solution.y[5,-1])
 plt.figure(0)
 plt.plot(i_array,V_cell,'.')
 plt.xlabel('External Current')
 plt.ylabel('Voltage')
 plt.show()
 
+plt.figure(1)
+plt.plot(i_array,C_H2_CL,'.')
+plt.plot(i_array,C_H2O_CL,'.')
+plt.xlabel('External Current')
+plt.ylabel('Hydrogen Concentration in Anode')
+plt.show()
 
-# plt.figure(1)
-# plt.plot(i_array,Dphi_an)
-# plt.plot(i_array,Dphi_ca)
-
-# plt.plot(i_array,V_cell,'.')
-
-# plt.show()

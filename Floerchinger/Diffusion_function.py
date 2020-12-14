@@ -6,6 +6,7 @@ Created on Fri Dec 11 14:35:30 2020
 """
 
 import numpy as np
+from SOFC_inputs import param, SV_0, ptr
 
 # T = 873
 # P = 101325
@@ -14,6 +15,7 @@ R = 8.3145
 
 
 
+    
 "anode"
 
 
@@ -27,7 +29,7 @@ def anode_difn_coeffs(X_f, param):
     D_m_k_an = np.zeros((N,1))
     
     
-    for i, k in enumerate(D_m_ij):
+    for i in range(N):
         #knudsen Diffusion
     
         D_kn_i[i] = 2/3*param.d_pore_an * np.sqrt(8*R*param.T/np.pi/param.MM_f[i])

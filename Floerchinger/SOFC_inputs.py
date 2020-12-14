@@ -14,7 +14,7 @@ F = 96485
 n = 2   #charge transfer number
 
 T = 873     #Temperature [K]
-P_an_0 = 101325  #Pressure [Pa]
+P_an_0 = 100000  #Pressure [Pa]
 
 i_ext =  10000       #applied current [A/m^2]
 
@@ -22,7 +22,7 @@ t_final =  1000000    # solve time [sec]
 
 
 #Mol fractions of fuel in anode {H2, H2O}
-X_k_an_0 = np.array([0.97, 0.03])
+X_k_an_0 = np.array([0.9, 0.1])
 #Mol fractions of fuel in anode {O2, N2}
 X_k_ca_0 = np.array([0.21, 0.79])
 
@@ -53,7 +53,7 @@ phi_elyte_0 = 0.6
 phi_ca_0 = 1
 
 "IT-SOFC metal supported parameters from expirimental data (Leah et al.)"
-th_an = 1.5E-5 #anode thiskness[m]
+th_an = 1.5E-5 #anode thickness[m]
 th_ca = 5E-5 #cathode thickness [m]
 
 th_sub = 3.0E-4 #substraight thickness [m]
@@ -84,6 +84,7 @@ delta_phi_dl_ca_0 = phi_ca_0 - phi_elyte_0
 
 C_k_an_0 = P_an_0*X_k_an_0/R/T
 
+
 SV_0 = np.hstack([delta_phi_dl_an_0, delta_phi_dl_ca_0, C_k_an_0, C_k_an_0])
 
 
@@ -103,10 +104,10 @@ MM_N2 = 28.0134
 MM_O2 = 16.000
 
 
-X_H2 = 0.97
-X_H2O = 0.03
-X_O2 = 0.21
-X_N2 = 0.79
+# X_H2 = 0.97
+# X_H2O = 0.03
+# X_O2 = 0.21
+# X_N2 = 0.79
 
 
 #diffusion volumes for fuller approx 
@@ -179,8 +180,8 @@ class param:
     MM_f = [MM_H2,MM_H2O]
     MM_a = [MM_O2,MM_N2]
 
-    X_f = [X_H2,X_H2O]
-    X_a = [X_O2,X_N2]
+    # X_f = [X_H2,X_H2O]
+    # X_a = [X_O2,X_N2]
 
     V_f = [V_H2,V_H2O]
     V_a = [V_O2,V_N2]
@@ -194,7 +195,7 @@ class ptr:
     phi_dl_ca = 1
     
     # C_k in anode substrate: starts just after phi_dl, is same size as X_k_an:
-    C_k_an_sub = np.arange(phi_dl_an+1, phi_dl_an+1+X_k_an_0.shape[0])
+    C_k_an_sub = np.arange(phi_dl_ca+1, phi_dl_ca+1+X_k_an_0.shape[0])
     
     # C_k in anode CL: starts just after substrate, is same size as X_k_an:
     C_k_an_CL = np.arange(C_k_an_sub[-1]+1, C_k_an_sub[-1]+1+X_k_an_0.shape[0])
