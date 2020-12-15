@@ -22,12 +22,12 @@ t_final =  1000000    # solve time [sec]
 
 
 #Mol fractions of fuel in anode {H2, H2O}
-X_k_an_0 = np.array([0.9, 0.1])
+X_k_an_0 = np.array([0.97, 0.03])
 #Mol fractions of fuel in anode {O2, N2}
 X_k_ca_0 = np.array([0.21, 0.79])
 
 
-mu_g_an = 9.54e-6 # Dynamic viscsity, Pa-s
+mu_g_an = 3.22E-5  # Dynamic viscsity, Pa-s
 eps_g_CL =  0.3 # Volume fraction of anode
 
 d_part_CL = 1E-6 #particle diamater of anode
@@ -50,7 +50,7 @@ C_dl_ca = 1e2 # F/m2
 "THese are GUESSES"
 phi_an_0 = 0
 phi_elyte_0 = 0.6
-phi_ca_0 = 1
+phi_ca_0 = 1.1
 
 "IT-SOFC metal supported parameters from expirimental data (Leah et al.)"
 th_an = 1.5E-5 #anode thickness[m]
@@ -180,8 +180,8 @@ class param:
     MM_f = [MM_H2,MM_H2O]
     MM_a = [MM_O2,MM_N2]
 
-    # X_f = [X_H2,X_H2O]
-    # X_a = [X_O2,X_N2]
+    X_k_an_0 = X_k_an_0
+    X_k_ca_0 = X_k_ca_0
 
     V_f = [V_H2,V_H2O]
     V_a = [V_O2,V_N2]

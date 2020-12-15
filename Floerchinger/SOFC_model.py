@@ -34,10 +34,12 @@ def SOFC_model(i_ext = None,P = None):
     return solution
 
 
-
+# if __name__ == '__main__':
+#     SOFC_model()
+    
 
     
-# solution = SOFC_model(1000)
+solution = SOFC_model(1000)
 
 # C_H2_CL = solution.y[4,-1]
 # C_H2O_CL = solution.y[5,-1]
@@ -46,37 +48,70 @@ def SOFC_model(i_ext = None,P = None):
 
 
 
-##############################################################    
+########################Current Study######################################    
     
-i_array = np.linspace(0.00000001,10000,50)
-V_cell = np.zeros_like(i_array)
-#Dphi_an = np.zeros_like(i_array)
-#Dphi_ca = np.zeros_like(i_array)
-C_H2_CL = np.zeros_like(i_array)
-C_H2O_CL = np.zeros_like(i_array)
+# i_array = np.linspace(0.00000001,10000,50)
+# V_cell = np.zeros_like(i_array)
+# #Dphi_an = np.zeros_like(i_array)
+# #Dphi_ca = np.zeros_like(i_array)
+# C_H2_CL = np.zeros_like(i_array)
+# C_H2O_CL = np.zeros_like(i_array)
 
-for j, current in enumerate(i_array):
-    #print(current)
-    solution = SOFC_model(current)
-    V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
-    #Dphi_an[j] = solution.y[0,-1]
-    #Dphi_ca[j] = solution.y[1,-1]
+# for j, current in enumerate(i_array):
+#     #print(current)
+#     solution = SOFC_model(current)
+#     V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
+#     #Dphi_an[j] = solution.y[0,-1]
+#     #Dphi_ca[j] = solution.y[1,-1]
     
-    #print(V_cell[j])
+#     print(V_cell[j])
     
-    C_H2_CL[j] = solution.y[4,-1]
-    C_H2O_CL[j] = solution.y[5,-1]
-    print(solution.y[4,-1],solution.y[5,-1])
-plt.figure(0)
-plt.plot(i_array,V_cell,'.')
-plt.xlabel('External Current')
-plt.ylabel('Voltage')
-plt.show()
+#     C_H2_CL[j] = solution.y[4,-1]
+#     C_H2O_CL[j] = solution.y[5,-1]
+#     #print(solution.y[4,-1],solution.y[5,-1])
+    
+# plt.figure(0)
+# plt.plot(i_array,V_cell,'.')
+# plt.xlabel('External Current')
+# plt.ylabel('Voltage')
+# plt.show()
 
-plt.figure(1)
-plt.plot(i_array,C_H2_CL,'.')
-plt.plot(i_array,C_H2O_CL,'.')
-plt.xlabel('External Current')
-plt.ylabel('Hydrogen Concentration in Anode')
-plt.show()
+# plt.figure(1)
+# plt.plot(i_array,C_H2_CL,'.')
+# plt.plot(i_array,C_H2O_CL,'.')
+# plt.xlabel('External Current')
+# plt.ylabel('Concentration in Anode')
+# plt.show()
 
+########################Pressure Study######################################    
+
+# pres_array = np.linspace(100000,500000,50)
+# V_cell = np.zeros_like(pres_array)
+# C_H2_CL = np.zeros_like(pres_array)
+# C_H2O_CL = np.zeros_like(pres_array)
+
+# for j, pressure in enumerate(pres_array):
+#     #print(pressure)
+#     solution = SOFC_model(1000,pressure)
+#     V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
+#     #Dphi_an[j] = solution.y[0,-1]
+#     #Dphi_ca[j] = solution.y[1,-1]
+    
+#     print(V_cell[j])
+    
+#     C_H2_CL[j] = solution.y[4,-1]
+#     C_H2O_CL[j] = solution.y[5,-1]
+#     #print(solution.y[4,-1],solution.y[5,-1])
+    
+# plt.figure(0)
+# plt.plot(pres_array,V_cell,'.')
+# plt.xlabel('System Pressure')
+# plt.ylabel('Voltage')
+# plt.show()
+
+# plt.figure(1)
+# plt.plot(pres_array,C_H2_CL,'.')
+# plt.plot(pres_array,C_H2O_CL,'.')
+# plt.xlabel('System Pressure')
+# plt.ylabel(' Concentration in Anode')
+# plt.show()

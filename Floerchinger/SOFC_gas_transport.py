@@ -24,8 +24,16 @@ def gas_flux(state1, state2, param):
 
     X_k_1 = state1['C_k']/np.sum(state1['C_k'])
     X_k_2 = state2['C_k']/np.sum(state2['C_k'])
+    
     #print(X_k_1, X_k_2)
+    
+    P_1 = np.sum(state1['C_k'])*R*state1['T']
+    P_2 = np.sum(state2['C_k'])*R*state2['T']
+    
+    #print(P_1,P_2)
+    
     X_k_int = f1*X_k_1 + f2*X_k_2
+    #print(X_k_int)
     
     dY = (state1['dY'] + state2['dY'])/2
   
@@ -33,15 +41,21 @@ def gas_flux(state1, state2, param):
     # #Use Fuller Approximation to find Diffusion coefficents
     D_eff_k = anode_difn_coeffs(X_k_2, param)
     D_eff_k = np.reshape(D_eff_k,(1,2))
-    #D_eff_k = np.array([5.48e-4, 6.13e-5])
+    D_eff_k = np.array([5.48e-4, 6.13e-5])
 
 
-    # #Convection velocity
-    V_conv_k = 0 
+    K_g = param.eps_g_CL**3*param.d_part_CL**2*param.tau_an**(-2)*(1-param.eps_g_CL)**(-2)/72
+    
+ 
+ 
+    
+    V_conv_k = -K_g*(P_2 - P_1)/dY/state2['mu']
     
     # #Diffusion Velocity
     V_difn_k = -D_eff_k * (X_k_2-X_k_1)/dY/X_k_int
-
+    #print(D_eff_k)
+    
+    #print(V_conv_k,V_difn_k)
     #total flux
     N_k = C_int*X_k_int*(V_conv_k + V_difn_k)
 
