@@ -14,6 +14,7 @@ F = 96485
 n = 2   #charge transfer number
 
 T = 873     #Temperature [K]
+P_amb = 100000# ambiant presure [Pa]
 P_an_0 = 100000  #Pressure [Pa]
 
 i_ext =  10000       #applied current [A/m^2]
@@ -28,29 +29,36 @@ X_k_ca_0 = np.array([0.21, 0.79])
 
 
 mu_g_an = 3.22E-5  # Dynamic viscsity, Pa-s
-eps_g_CL =  0.3 # Volume fraction of anode
+
+#from table 3 of Zerki et al.
+eps_g_CL =  0.38 # Volume fraction of gasses in anode
+eps_solid_CL = 0.62 # Volume fraction of solids (Ni+CGO) in anode
 
 d_part_CL = 1E-6 #particle diamater of anode
 
 #stoich coeff's for anode
 nu_k_an = np.array([-1,1])
-
+nu_k_ca = np.array([-0.5,0])
 " THIS IS A GUESS :eventually it will depend on the gibbs gree energy and the activities"
 delta_phi_an_eq =  -0.6 #Anode overpotental [V]
 delta_phi_ca_eq =  0.4 #Cathode overpotental [V]
 
-#delta_phi_an_eq = delta_G_0_an - R*T/(n*F)*logproduct(np.power(X_an_0,nu_an))
-#delta_phi_ca_eq = delta_G_0_ca - R*T/(n*F)logproduct(np.power(X_ca_0,nu_ca))
+delta_G_an_0 = -228572 #Gibb free energy at standard state [J/mol]
+delta_G_ca_0 = 0 #Gibb free energy at standard state [J/mol]
+
+#Equilibrium potentals
+delta_phi_an_eq = -delta_G_an_0/(n*F) - R*T/(n*F)*np.log(np.product(np.power(X_k_an_0,nu_k_an)))
+delta_phi_ca_eq = -delta_G_ca_0/(n*F) - R*T/(n*F)*np.log(np.product(np.power(X_k_ca_0,nu_k_ca)))
 
 
 " THIS IS A GUESS :Charge transfer inputs "
-C_dl_an = 1e2 # F/m2
-C_dl_ca = 1e2 # F/m2
+C_dl_an = 1e6 # F/m2
+C_dl_ca = 1e6 # F/m2
 
 "THese are GUESSES"
-phi_an_0 = 0
-phi_elyte_0 = 0.6
-phi_ca_0 = 1.1
+phi_an_0 =1.1
+phi_elyte_0 = 0
+phi_ca_0 = -0.2
 
 "IT-SOFC metal supported parameters from expirimental data (Leah et al.)"
 th_an = 1.5E-5 #anode thickness[m]
@@ -104,12 +112,6 @@ MM_N2 = 28.0134
 MM_O2 = 16.000
 
 
-# X_H2 = 0.97
-# X_H2O = 0.03
-# X_O2 = 0.21
-# X_N2 = 0.79
-
-
 #diffusion volumes for fuller approx 
 V_H2 = 6.12
 V_H2O = 12.7
@@ -124,6 +126,7 @@ class param:
     n = n
     T = T
     P_an = P_an_0
+    P_amb = P_amb
     
     i_ext = i_ext  #applied current [A/m^2]
 
@@ -132,6 +135,8 @@ class param:
     delta_phi_an_eq = delta_phi_an_eq  #Anode overpotental [V]
     delta_phi_ca_eq = delta_phi_ca_eq #Cathode overpotental [V]
     
+    delta_G_an_0 = delta_G_an_0 #Gibb free energy at standard state [J/mol]
+    delta_G_ca_0 = delta_G_ca_0 #Gibb free energy at standard state [J/mol]
     
     #IT-SOFC metal supported parameters from expirimental data (Leah et al.)
     E_a_ca = E_a_ca   #Cathode activation energy [J/mol]
@@ -161,12 +166,13 @@ class param:
     mu_g_an = mu_g_an
     
     nu_k_an = nu_k_an
+    nu_k_ca = nu_k_ca
     
     eps_g_CL = eps_g_CL
 
     d_part_CL = d_part_CL
     
-    A_fac_an = 3*th_an*eps_g_CL/(d_part_CL/2)    
+    A_fac_dl = 3*th_an*eps_solid_CL/(d_part_CL/2)    
     
     d_pore_an = d_pore_an
     d_pore_ca = d_pore_ca

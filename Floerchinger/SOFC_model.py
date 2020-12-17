@@ -14,7 +14,7 @@
 # Import necessary modules:
 from matplotlib import pyplot as plt
 import numpy as np
-
+from SOFC_inputs import param
 
 
     
@@ -39,7 +39,9 @@ def SOFC_model(i_ext = None,P = None):
     
 
     
-solution = SOFC_model(1000)
+solution = SOFC_model(1000, 500000)
+V_cell = solution.y[1,-1] - solution.y[0,-1]
+print(V_cell)
 
 # C_H2_CL = solution.y[4,-1]
 # C_H2O_CL = solution.y[5,-1]
@@ -47,10 +49,10 @@ solution = SOFC_model(1000)
 # print(solution.y[4,-1],solution.y[5,-1])
 
 
-
 ########################Current Study######################################    
     
 # i_array = np.linspace(0.00000001,10000,50)
+
 # V_cell = np.zeros_like(i_array)
 # #Dphi_an = np.zeros_like(i_array)
 # #Dphi_ca = np.zeros_like(i_array)
@@ -85,29 +87,38 @@ solution = SOFC_model(1000)
 
 ########################Pressure Study######################################    
 
-# pres_array = np.linspace(100000,500000,50)
-# V_cell = np.zeros_like(pres_array)
-# C_H2_CL = np.zeros_like(pres_array)
-# C_H2O_CL = np.zeros_like(pres_array)
+pres_array = np.linspace(100000,500000,50)
+V_cell = np.zeros_like(pres_array)
+C_H2_CL = np.zeros_like(pres_array)
+C_H2O_CL = np.zeros_like(pres_array)
+ASR = np.zeros_like(pres_array)
+OCV = np.zeros_like(pres_array)
 
-# for j, pressure in enumerate(pres_array):
-#     #print(pressure)
-#     solution = SOFC_model(1000,pressure)
-#     V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
-#     #Dphi_an[j] = solution.y[0,-1]
-#     #Dphi_ca[j] = solution.y[1,-1]
+for j, pressure in enumerate(pres_array):
+    #print(pressure)
+    solution = SOFC_model(1E-10,pressure)
     
-#     print(V_cell[j])
+    OCV[j] = solution.y[1,-1] - solution.y[0,-1]
     
-#     C_H2_CL[j] = solution.y[4,-1]
-#     C_H2O_CL[j] = solution.y[5,-1]
-#     #print(solution.y[4,-1],solution.y[5,-1])
+    solution = SOFC_model(1000,pressure)
     
-# plt.figure(0)
-# plt.plot(pres_array,V_cell,'.')
-# plt.xlabel('System Pressure')
-# plt.ylabel('Voltage')
-# plt.show()
+    V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
+    
+    ASR[j] = (V_cell[j]-OCV[j])/param.i_ext
+    #Dphi_an[j] = solution.y[0,-1]
+    #Dphi_ca[j] = solution.y[1,-1]
+    
+    print(ASR[j])
+    
+    C_H2_CL[j] = solution.y[4,-1]
+    C_H2O_CL[j] = solution.y[5,-1]
+    #print(solution.y[4,-1],solution.y[5,-1])
+    
+plt.figure(0)
+plt.plot(pres_array,V_cell,'.')
+plt.xlabel('System Pressure')
+plt.ylabel('Voltage')
+plt.show()
 
 # plt.figure(1)
 # plt.plot(pres_array,C_H2_CL,'.')
