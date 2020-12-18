@@ -124,7 +124,7 @@ plt.plot(pres_array,ASR[2,:])
 plt.xlabel('System Pressure [Pa]')
 plt.ylabel('Area Specific Resistance [ohm/m^2]')
 plt.title('ASR vs Pressure for Various Current')
-plt.legend('0.1 A/cm^2','0.5 A/cm^2','1 A/m^2')
+plt.legend(('0.1 A/cm^2','0.5 A/cm^2','1 A/m^2'))
 plt.show()
 
 # plt.figure(1)
