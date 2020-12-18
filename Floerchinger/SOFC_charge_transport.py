@@ -27,10 +27,6 @@ def Butler_Volmer(SV, param, ptr):
 
     
     #get partial pressure of hydrogen
-    # P_H2 = C_k_an_CL[0]*R*param.T
-    # P_H2O = C_k_an_CL[1]*R*param.T
-    #print(P_H2,P_H2O)
-    
     P_H2 = param.P_an*X_k_an[0]
     P_H2O = param.P_an*X_k_an[1]
     
@@ -38,9 +34,10 @@ def Butler_Volmer(SV, param, ptr):
     
     #print(P_H2/P_H2O)
     
-    delta_phi_an_eq = -param.delta_G_ca_0/(param.n*F) - R*param.T/(param.n*F)*np.log(np.product(np.power(param.X_k_an_0,param.nu_k_ca))) - np.log(param.P_an/param.P_amb)
+    delta_phi_an_eq = -param.delta_G_ca_0/(param.n*F) - R*param.T/(param.n*F)*(np.log(np.product(np.power(param.X_k_an_0,param.nu_k_ca))) - np.log(param.P_an/param.P_amb))
     #print(delta_phi_an_eq)
-    #delta_phi_ca_eq = -param.delta_G_ca_0/(param.n*F) - R*param.T/(param.n*F)*np.log(np.product(np.power(param.X_k_ca_0,param.nu_k_ca)))
+    
+    delta_phi_ca_eq = -param.delta_G_ca_0/(param.n*F) - R*param.T/(param.n*F)*np.log(np.product(np.power(param.X_k_ca_0,param.nu_k_ca)))
     
     #print(P_H2)
     
@@ -49,7 +46,6 @@ def Butler_Volmer(SV, param, ptr):
     #print(eta_an)
 
     #The equation for anode exchange current density is given in Leah et al
-    #i_o_an = (P_H2)**0.5 * param.K_a* (R*param.T)/(param.n*F)*exp(-param.E_a_an/(R*param.T))
     i_o_an = 15600*(P_H2/100000)**0.5*(P_H2O/100000)**0.5 * exp(-60000/R*(1/param.T - 1/873))
 
     
@@ -63,8 +59,7 @@ def Butler_Volmer(SV, param, ptr):
     #Activation Overpotental
     eta_ca = SV[ptr.phi_dl_ca] - param.delta_phi_ca_eq
     
-    #The equation for anode exchange current density is given in Leah et al
-    #i_o_ca = param.K_c* (R*param.T)/(param.n*F)*exp(-param.E_a_ca/(R*param.T))
+    #The equation for anode exchange current density is given in Leah et a+
     i_o_ca = 2470*(P_O2/100000)**0.2 * exp(-162000/R*(1/param.T-1/873))
     
 

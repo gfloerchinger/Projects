@@ -86,38 +86,45 @@ print(V_cell)
 # plt.show()
 
 ########################Pressure Study######################################    
-
+i_array = np.array([1000,5000,10000])
 pres_array = np.linspace(100000,500000,50)
-V_cell = np.zeros_like(pres_array)
-C_H2_CL = np.zeros_like(pres_array)
-C_H2O_CL = np.zeros_like(pres_array)
-ASR = np.zeros_like(pres_array)
+V_cell = np.zeros([len(pres_array),len(pres_array)])
+C_H2_CL = np.zeros_like(V_cell)
+C_H2O_CL = np.zeros_like(V_cell)
+ASR = np.zeros_like(V_cell)
 OCV = np.zeros_like(pres_array)
 
-for j, pressure in enumerate(pres_array):
-    #print(pressure)
-    solution = SOFC_model(1E-10,pressure)
+for i, current in enumerate(i_array):
+
+    for j, pressure in enumerate(pres_array):
+        #print(pressure)
+        solution = SOFC_model(1E-10,pressure)
+        
+        OCV[j] = solution.y[1,-1] - solution.y[0,-1]
+        
+        solution = SOFC_model(current,pressure)
     
-    OCV[j] = solution.y[1,-1] - solution.y[0,-1]
-    
-    solution = SOFC_model(1000,pressure)
-    
-    V_cell[j] = solution.y[1,-1] - solution.y[0,-1]
-    
-    ASR[j] = (V_cell[j]-OCV[j])/param.i_ext
-    #Dphi_an[j] = solution.y[0,-1]
-    #Dphi_ca[j] = solution.y[1,-1]
-    
-    print(ASR[j])
-    
-    C_H2_CL[j] = solution.y[4,-1]
-    C_H2O_CL[j] = solution.y[5,-1]
-    #print(solution.y[4,-1],solution.y[5,-1])
+        V_cell[i,j] = solution.y[1,-1] - solution.y[0,-1]
+        
+        ASR[i,j] = (V_cell[i,j]-OCV[j])/param.i_ext
+        #Dphi_an[j] = solution.y[0,-1]
+        #Dphi_ca[j] = solution.y[1,-1]
+        
+        print(ASR[i,j])
+        
+        # C_H2_CL[j] = solution.y[4,-1]
+        # C_H2O_CL[j] = solution.y[5,-1]
+        #print(solution.y[4,-1],solution.y[5,-1])
+
     
 plt.figure(0)
-plt.plot(pres_array,V_cell,'.')
-plt.xlabel('System Pressure')
-plt.ylabel('Voltage')
+plt.plot(pres_array,ASR[0,:])
+plt.plot(pres_array,ASR[1,:])
+plt.plot(pres_array,ASR[2,:])
+plt.xlabel('System Pressure [Pa]')
+plt.ylabel('Area Specific Resistance [ohm/m^2]')
+plt.title('ASR vs Pressure for Various Current')
+plt.legend('0.1 A/cm^2','0.5 A/cm^2','1 A/m^2')
 plt.show()
 
 # plt.figure(1)

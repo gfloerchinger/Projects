@@ -41,7 +41,7 @@ def gas_flux(state1, state2, param):
     # #Use Fuller Approximation to find Diffusion coefficents
     D_eff_k = anode_difn_coeffs(X_k_2, param)
     D_eff_k = np.reshape(D_eff_k,(1,2))
-    #D_eff_k = np.array([5.48e-4, 6.13e-5])
+    
 
 
     K_g = param.eps_g_CL**3*param.d_part_CL**2*param.tau_an**(-2)*(1-param.eps_g_CL)**(-2)/72
